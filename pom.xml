@@ -333,6 +333,20 @@
                             <version>1.0-SNAPSHOT</version>
                         </moduleDependency>
 
+                        <!-- (ADDED) Best Publishing Metadata Ingestion -->
+                        <moduleDependency>
+                            <groupId>org.acme.bestpublishing</groupId>
+                            <artifactId>metadata-ingestion</artifactId>
+                            <version>1.0-SNAPSHOT</version>
+                        </moduleDependency>
+
+                        <!-- (ADDED) Best Publishing Process -->
+                        <moduleDependency>
+                            <groupId>org.acme.bestpublishing</groupId>
+                            <artifactId>publishing-workflow</artifactId>
+                            <version>1.0-SNAPSHOT</version>
+                        </moduleDependency>
+
                         <!-- Bring in the integration tests -->
                         <moduleDependency>
                             <groupId>${project.groupId}</groupId>
@@ -357,6 +371,13 @@
                         <moduleDependency>
                             <groupId>org.acme.bestpublishing</groupId>
                             <artifactId>book-management-site-ui</artifactId>
+                            <version>1.0-SNAPSHOT</version>
+                        </moduleDependency>
+
+                        <!-- (ADDED) Best Publishing Workflow UI -->
+                        <moduleDependency>
+                            <groupId>org.acme.bestpublishing</groupId>
+                            <artifactId>publishing-workflow-ui</artifactId>
                             <version>1.0-SNAPSHOT</version>
                         </moduleDependency>
                     </shareModules>
@@ -400,6 +421,19 @@
             </plugin>
         </plugins>
     </build>
+
+    <!-- ADDED TO SHOW HOW TO GENERATE WARS WITHOUT RUNNING TOMCAT -->
+    <profiles>
+        <profile>
+            <!-- Invoke your build with -Pgenerate-wars to run the system, but only to the point
+                 where the wars are generated, skip starting Tomcat.
+             -->
+            <id>generate-wars-only</id>
+            <properties>
+                <maven.alfresco.startTomcat>false</maven.alfresco.startTomcat>
+            </properties>
+        </profile>
+    </profiles>
 
     <!--
         Alfresco Maven Repositories
