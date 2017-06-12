@@ -347,6 +347,13 @@
                             <version>1.0-SNAPSHOT</version>
                         </moduleDependency>
 
+                        <!-- (ADDED) Best Publishing Book Management Site Repo Actions and Web Scripts -->
+                        <moduleDependency>
+                            <groupId>org.acme.bestpublishing</groupId>
+                            <artifactId>book-management-site-actions</artifactId>
+                            <version>1.0-SNAPSHOT</version>
+                        </moduleDependency>
+
                         <!-- Bring in the integration tests -->
                         <moduleDependency>
                             <groupId>${project.groupId}</groupId>
