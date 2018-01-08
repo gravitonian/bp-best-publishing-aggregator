@@ -1,59 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.acme.bestpublishing</groupId>
+
     <artifactId>best-publishing-aggregator</artifactId>
     <version>1.0-SNAPSHOT</version>
+
     <!-- UPDATED -->
     <name>BestPub Aggregate Project</name>
     <description>Best Publishing Aggregate Project All-In-One (AIO)</description>
     <packaging>pom</packaging>
 
+    <!-- ADDED -->
+    <parent>
+        <groupId>org.acme.bestpublishing</groupId>
+        <artifactId>best-publishing-parent</artifactId>
+        <version>1.1</version>
+    </parent>
+
     <properties>
-        <!-- Alfresco Maven Plugin version to use -->
-        <alfresco.sdk.version>3.0.0</alfresco.sdk.version>
-
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <!-- Alfresco Data directory, which will contain:
-              Content Store (i.e. the files we upload)
-              Database (i.e. the metadata for the uploaded files)
-              Search index (i.e. the indexed content and metadata)
-             Configured in alfresco-global.properties with the 'dir.root' property.
-              -->
-        <alfresco.data.location>${session.executionRootDirectory}/alf_data_dev</alfresco.data.location>
-
-        <!-- Duplicated with alfresco.solrHome in the plugin, we need them out here to do filtering -->
-        <solr.home>${alfresco.data.location}/solr</solr.home>
-        <solr.model.dir>${solr.home}/alfrescoModels</solr.model.dir>
-        <solr.content.dir>${solr.home}/index</solr.content.dir>
-
-        <!-- Properties used in dependency declarations, you don't need to change these -->
-        <alfresco.groupId>org.alfresco</alfresco.groupId>
-
-        <!-- Alfresco Platform and Share webapp versions, these are the original Alfresco webapps that will be
-             customized and then deployed and run by the tomcat maven plugin when
-             executing for example $ mvn clean install alfresco:run -->
-        <alfresco.platform.version>5.2.e</alfresco.platform.version>
-        <alfresco.share.version>5.2.d</alfresco.share.version>
-
-        <!-- Default is to run with a Community edition, change to 'enterprise' if using Enterprise edition -->
-        <maven.alfresco.edition>community</maven.alfresco.edition>
-
-        <!-- Alfresco Surf version, if you change Share version you might need to change Surf version -->
-        <alfresco.surf.version>6.11</alfresco.surf.version>
-
-        <!-- JRebel Hot reloading of classpath stuff and web resource stuff -->
-        <jrebel.version>1.1.6</jrebel.version>
-
-        <!-- Environment to use, Alfresco Maven Plugin will
-             copy alfresco-global-*.properties files from this directory, such as src/test/properties/local -->
-        <env>local</env>
-
-        <!-- Compile with Java 7, default is 5 -->
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <!-- Extension Project Versions -->
+        <bp.content.model.version>1.0</bp.content.model.version>
+        <bp.book.management.sit.bootstrap.version>1.0</bp.book.management.sit.bootstrap.version>
+        <bp.utils.version>1.1</bp.utils.version>
+        <bp.content.ingestion.version>1.0</bp.content.ingestion.version>
+        <bp.metadata.ingestion.version>1.0</bp.metadata.ingestion.version>
+        <bp.publishing.workflow.version>1.0</bp.publishing.workflow.version>
+        <bp.book.management.site.actions.version>1.0</bp.book.management.site.actions.version>
+        <bp.content.model.ui.version>1.0</bp.content.model.ui.version>
+        <bp.book.management.site.ui.version>1.1</bp.book.management.site.ui.version>
+        <bp.publishing.workflow.ui.version>1.0</bp.publishing.workflow.ui.version>
+        <bp.book.library.site.ui.version>1.0</bp.book.library.site.ui.version>
     </properties>
+
+    <scm>
+        <connection>scm:git:https://github.com/gravitonian/bp-best-publishing-aggregator.git</connection>
+        <url>https://github.com/gravitonian/bp-best-publishing-aggregator</url>
+        <developerConnection>scm:git:https://github.com/gravitonian/bp-best-publishing-aggregator.git</developerConnection>
+    </scm>
+
+    <modules>
+        <module>platform-app</module>
+    </modules>
 
     <!-- Libs used in Unit and Integration tests -->
     <!-- IMPORTANT - Test dependencies need to be here in the top parent POM as
@@ -158,119 +145,7 @@
     </dependencyManagement>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <!--
-                    Build an AMP if 3rd party libs are needed by the extensions
-                    JARs are the default artifact produced in your modules, if you want to build an amp for each module
-                    you have to enable this plugin and inspect the src/main/assembly.xml file if you want to customize
-                    the layout of your AMP. The end result is that Maven will produce both a JAR file and an AMP with your
-                    module.
-                -->
-                <!--
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>2.6</version>
-                    <executions>
-                        <execution>
-                            <id>build-amp-file</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>single</goal>
-                            </goals>
-                            <configuration>
-                                <appendAssemblyId>false</appendAssemblyId>
-                                <descriptor>src/main/assembly/amp.xml</descriptor>
-                            </configuration>
-                        </execution>
-                    </executions>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.alfresco.maven.plugin</groupId>
-                            <artifactId>alfresco-maven-plugin</artifactId>
-                            <version>${alfresco.sdk.version}</version>
-                        </dependency>
-                    </dependencies>
-                </plugin>
-                -->
-
-                <!-- Filter resources in any sub-project with this config -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.0.1</version>
-                    <configuration>
-                        <encoding>UTF-8</encoding>
-                        <nonFilteredFileExtensions> <!-- jpg, jpeg, gif, bmp and png are added automatically -->
-                            <nonFilteredFileExtension>ftl</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>acp</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>svg</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>pdf</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>doc</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>docx</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>xls</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>xlsx</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>ppt</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>pptx</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>bin</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>lic</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>swf</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>zip</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>msg</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>jar</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>eot</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>woff</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>woff2</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>css</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>ico</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>psd</nonFilteredFileExtension>
-                            <nonFilteredFileExtension>js</nonFilteredFileExtension>
-                        </nonFilteredFileExtensions>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-
-        <!-- Make sure resources in sub-projects are filtered -->
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-
-
         <plugins>
-            <!-- Filter the test resource files in the AIO parent project, and do property substitutions.
-                 We need this config so this is done before the Alfresco Maven Plugin 'run' is executed. -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.0.1</version>
-                <inherited>false</inherited>
-                <!-- Run only for the AIO parent Project -->
-                <executions>
-                    <execution>
-                        <id>copy-and-filter-test-resources</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.testOutputDirectory}</outputDirectory>
-                            <resources>
-                                <testResource>
-                                    <directory>src/test/resources</directory>
-                                    <filtering>true</filtering>
-                                </testResource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <!--
                 The Alfresco Maven Plugin contains all the logic to run the extension
                 in an embedded Tomcat with the H2 database.
@@ -304,63 +179,49 @@
                             <version>${alfresco.share.version}</version>
                             <type>amp</type>
                         </moduleDependency>
-
                         <!-- (ADDED) Best Publishing Content Model -->
                         <moduleDependency>
                             <groupId>org.acme.bestpublishing</groupId>
                             <artifactId>content-model</artifactId>
-                            <version>1.0-SNAPSHOT</version>
+                            <version>${bp.content.model.version}</version>
                         </moduleDependency>
-
                         <!-- (ADDED) Best Publishing Bootstrapping of site and data dictionary folders -->
                         <moduleDependency>
                             <groupId>org.acme.bestpublishing</groupId>
                             <artifactId>book-management-site-bootstrap</artifactId>
-                            <version>1.0-SNAPSHOT</version>
+                            <version>${bp.book.management.sit.bootstrap.version}</version>
                         </moduleDependency>
-
                         <!-- (ADDED) Best Publishing Content Utility Services -->
                         <moduleDependency>
                             <groupId>org.acme.bestpublishing</groupId>
                             <artifactId>utils</artifactId>
-                            <version>1.0-SNAPSHOT</version>
+                            <version>${bp.utils.version}</version>
                         </moduleDependency>
-
                         <!-- (ADDED) Best Publishing Content Ingestion -->
                         <moduleDependency>
                             <groupId>org.acme.bestpublishing</groupId>
                             <artifactId>content-ingestion</artifactId>
-                            <version>1.0-SNAPSHOT</version>
+                            <version>${bp.content.ingestion.version}</version>
                         </moduleDependency>
-
                         <!-- (ADDED) Best Publishing Metadata Ingestion -->
                         <moduleDependency>
                             <groupId>org.acme.bestpublishing</groupId>
                             <artifactId>metadata-ingestion</artifactId>
-                            <version>1.0-SNAPSHOT</version>
+                            <version>${bp.metadata.ingestion.version}</version>
                         </moduleDependency>
-
                         <!-- (ADDED) Best Publishing Process -->
                         <moduleDependency>
                             <groupId>org.acme.bestpublishing</groupId>
                             <artifactId>publishing-workflow</artifactId>
-                            <version>1.0-SNAPSHOT</version>
+                            <version>${bp.publishing.workflow.version}</version>
                         </moduleDependency>
-
                         <!-- (ADDED) Best Publishing Book Management Site Repo Actions and Web Scripts -->
                         <moduleDependency>
                             <groupId>org.acme.bestpublishing</groupId>
                             <artifactId>book-management-site-actions</artifactId>
-                            <version>1.0-SNAPSHOT</version>
+                            <version>${bp.book.management.site.actions.version}</version>
                         </moduleDependency>
 
-                        <!-- Bring in the integration tests -->
-                        <moduleDependency>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>integration-tests</artifactId>
-                            <version>${project.version}</version>
-                            <classifier>tests</classifier>
-                        </moduleDependency>
 
                     </platformModules>
 
@@ -372,115 +233,71 @@
                         <moduleDependency>
                             <groupId>org.acme.bestpublishing</groupId>
                             <artifactId>content-model-ui</artifactId>
-                            <version>1.0-SNAPSHOT</version>
+                            <version>${bp.content.model.ui.version}</version>
                         </moduleDependency>
                         <!-- (ADDED) Best Publishing Book Management Site UI Components -->
                         <moduleDependency>
                             <groupId>org.acme.bestpublishing</groupId>
                             <artifactId>book-management-site-ui</artifactId>
-                            <version>1.0-SNAPSHOT</version>
+                            <version>${bp.book.management.site.ui.version}</version>
                         </moduleDependency>
-
                         <!-- (ADDED) Best Publishing Workflow UI -->
                         <moduleDependency>
                             <groupId>org.acme.bestpublishing</groupId>
                             <artifactId>publishing-workflow-ui</artifactId>
-                            <version>1.0-SNAPSHOT</version>
+                            <version>${bp.publishing.workflow.ui.version}</version>
+                        </moduleDependency>
+                        <moduleDependency>
+                            <groupId>org.acme.bestpublishing</groupId>
+                            <artifactId>book-library-site-ui</artifactId>
+                            <version>${bp.book.library.site.ui.version}</version>
                         </moduleDependency>
                     </shareModules>
                 </configuration>
             </plugin>
 
-            <!-- Hot reloading with JRebel -->
-            <plugin>
-                <groupId>org.zeroturnaround</groupId>
-                <artifactId>jrebel-maven-plugin</artifactId>
-                <version>${jrebel.version}</version>
-                <executions>
-                    <execution>
-                        <id>generate-rebel-xml</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <!-- For more information about how to configure JRebel plugin see:
-                         http://manuals.zeroturnaround.com/jrebel/standalone/maven.html#maven-rebel-xml -->
-                    <classpath>
-                        <fallback>all</fallback>
-                        <resources>
-                            <resource>
-                                <directory>${project.build.outputDirectory}</directory>
-                                <directory>${project.build.testOutputDirectory}</directory>
-                            </resource>
-                        </resources>
-                    </classpath>
-
-                    <!--
-                      alwaysGenerate - default is false
-                      If 'false' - rebel.xml is generated if timestamps of pom.xml and the current rebel.xml file are not equal.
-                      If 'true' - rebel.xml will always be generated
-                    -->
-                    <alwaysGenerate>true</alwaysGenerate>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 
-    <!-- ADDED TO SHOW HOW TO GENERATE WARS WITHOUT RUNNING TOMCAT -->
-    <profiles>
+    <!-- ADDED to show how to generate WARs without having to run Tomcat -->
+     <profiles>
         <profile>
             <!-- Invoke your build with -Pgenerate-wars to run the system, but only to the point
-                 where the wars are generated, skip starting Tomcat.
-             -->
-            <id>generate-wars-only</id>
+                  where the wars are generated, skip starting Tomcat.
+              -->
+            <id>generate-wars</id>
             <properties>
+                <!-- Do not start tomcat -->
                 <maven.alfresco.startTomcat>false</maven.alfresco.startTomcat>
+                <!-- disable h2 config -->
+                <maven.alfresco.enableH2>fase</maven.alfresco.enableH2>
+                <!-- We always need the Platform/Repo webapp - alfresco.war -->
+                <maven.alfresco.enablePlatform>true</maven.alfresco.enablePlatform>
+                <!-- We need Share webapp, so we got a UI for working with the Repo -->
+                <maven.alfresco.enableShare>true</maven.alfresco.enableShare>
+                <!-- We don't need to build solr files -->
+                <maven.alfresco.enableSolr>false</maven.alfresco.enableSolr>
+                <!-- We don't need the REST API Explorer -->
+                <maven.alfresco.enableApiExplorer>false</maven.alfresco.enableApiExplorer>
+                <!-- Disable copying of hotswap config into war -->
+                <maven.alfresco.copyHotswapAgentConfig>false</maven.alfresco.copyHotswapAgentConfig>
+                <!-- Do not copy test properties -->
+                <maven.alfresco.enableTestProperties>false</maven.alfresco.enableTestProperties>
+                <!-- Do not include the local share logging config -->
+                <maven.alfresco.useCustomShareLog4jConfig>false</maven.alfresco.useCustomShareLog4jConfig>
+                <!-- Do not include local configs -->
+                <env>prod</env>
+                <!-- Do not generate jrebel rebel.xml files -->
+                <skip.jrebel.plugin>true</skip.jrebel.plugin>
             </properties>
         </profile>
     </profiles>
 
-    <!--
-        Alfresco Maven Repositories
-        -->
     <repositories>
         <repository>
-            <id>alfresco-public</id>
-            <url>https://artifacts.alfresco.com/nexus/content/groups/public</url>
-        </repository>
-        <repository>
-            <id>alfresco-public-snapshots</id>
-            <url>https://artifacts.alfresco.com/nexus/content/groups/public-snapshots</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-            </snapshots>
-        </repository>
-        <!-- Alfresco Enterprise Edition Artifacts, put username/pwd for server in settings.xml -->
-        <repository>
-            <id>alfresco-private-repository</id>
-            <url>https://artifacts.alfresco.com/nexus/content/groups/private</url>
+            <id>local-releases</id>
+            <url>http://localhost:8081/repository/maven-releases/</url>
         </repository>
     </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>alfresco-plugin-public</id>
-            <url>https://artifacts.alfresco.com/nexus/content/groups/public</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>alfresco-plugin-public-snapshots</id>
-            <url>https://artifacts.alfresco.com/nexus/content/groups/public-snapshots</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-  <modules>
-    <module>best-publishing-aggregator-platform-jar</module>
-    <module>best-publishing-aggregator-share-jar</module>
-    <module>integration-tests</module>
-  </modules>
+
 </project>
