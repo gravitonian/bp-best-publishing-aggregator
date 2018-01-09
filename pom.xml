@@ -41,6 +41,7 @@
 
     <modules>
         <module>platform-app</module>
+        <module>share-app</module>
     </modules>
 
     <!-- Libs used in Unit and Integration tests -->

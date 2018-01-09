@@ -13,12 +13,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>platform-app</artifactId>
+    <artifactId>share-app</artifactId>
 
     <!-- UPDATED -->
-    <name>Alfresco Platform WAR Application</name>
+    <name>Alfresco Share WAR Application</name>
     <packaging>war</packaging>
-    <description>Alfresco Platform aggregator, installs your platform JARs into the alfresco.war for aggregation and easy deployment purposes</description>
+    <description>Alfresco Share aggregator, installs your share JARs into the share.war for aggregation and easy deployment purposes</description>
 
     <!-- ADDED -->
     <parent>
@@ -28,56 +28,35 @@
     </parent>
 
     <properties>
-        <alfresco.platform.war.artifactId>alfresco-platform</alfresco.platform.war.artifactId>
+        <alfresco.share.war.artifactId>share</alfresco.share.war.artifactId>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>${alfresco.groupId}</groupId>
-            <artifactId>${alfresco.platform.war.artifactId}</artifactId>
-            <version>${alfresco.platform.version}</version>
+            <artifactId>${alfresco.share.war.artifactId}</artifactId>
+            <version>${alfresco.share.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
-            <groupId>${alfresco.groupId}</groupId>
-            <artifactId>alfresco-share-services</artifactId>
-            <version>${alfresco.share.version}</version>
-            <type>amp</type>
+            <groupId>org.acme.bestpublishing</groupId>
+            <artifactId>content-model-ui</artifactId>
+            <version>${bp.content.model.ui.version}</version>
         </dependency>
         <dependency>
             <groupId>org.acme.bestpublishing</groupId>
-            <artifactId>content-model</artifactId>
-            <version>${bp.content.model.version}</version>
+            <artifactId>book-management-site-ui</artifactId>
+            <version>${bp.book.management.site.ui.version}</version>
         </dependency>
         <dependency>
             <groupId>org.acme.bestpublishing</groupId>
-            <artifactId>book-management-site-bootstrap</artifactId>
-            <version>${bp.book.management.sit.bootstrap.version}</version>
+            <artifactId>publishing-workflow-ui</artifactId>
+            <version>${bp.publishing.workflow.ui.version}</version>
         </dependency>
         <dependency>
             <groupId>org.acme.bestpublishing</groupId>
-            <artifactId>utils</artifactId>
-            <version>${bp.utils.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.acme.bestpublishing</groupId>
-            <artifactId>content-ingestion</artifactId>
-            <version>${bp.content.ingestion.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.acme.bestpublishing</groupId>
-            <artifactId>metadata-ingestion</artifactId>
-            <version>${bp.metadata.ingestion.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.acme.bestpublishing</groupId>
-            <artifactId>publishing-workflow</artifactId>
-            <version>${bp.publishing.workflow.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.acme.bestpublishing</groupId>
-            <artifactId>book-management-site-actions</artifactId>
-            <version>${bp.book.management.site.actions.version}</version>
+            <artifactId>book-library-site-ui</artifactId>
+            <version>${bp.book.library.site.ui.version}</version>
         </dependency>
     </dependencies>
 
@@ -94,7 +73,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <!--  Here you control the order of the overlays on top of the alfresco.war.
+                    <!--  Here you control the order of the overlays on top of the share.war.
                         Notes:
                             Every overlay need to be defined as a dependency first.
                             In order to have a dependency effectively added to the WAR, you need to
@@ -106,54 +85,36 @@
                     <overlays>
                         <!-- Current project customizations. This is normally empty, since customizations come from the JARs and AMPs -->
                         <overlay />
-                        <!-- The Alfresco WAR -->
+                        <!-- The Share WAR -->
                         <overlay>
                             <groupId>${alfresco.groupId}</groupId>
-                            <artifactId>${alfresco.platform.war.artifactId}</artifactId>
+                            <artifactId>${alfresco.share.war.artifactId}</artifactId>
                             <type>war</type>
                             <!-- To allow inclusion of META-INF -->
                             <excludes />
                         </overlay>
 
-                        <!-- Include all platform extension JARs here -->
-                        <overlay>
-                            <groupId>${alfresco.groupId}</groupId>
-                            <artifactId>alfresco-share-services</artifactId>
-                            <type>amp</type>
-                        </overlay>
+                        <!-- Include all Share extension JARs here -->
                         <overlay>
                             <groupId>org.acme.bestpublishing</groupId>
-                            <artifactId>content-model</artifactId>
+                            <artifactId>content-model-ui</artifactId>
+                            <type>jar</type>
+                        </overlay>
+                        <!-- (ADDED) Best Publishing Book Management Site UI Components -->
+                        <overlay>
+                            <groupId>org.acme.bestpublishing</groupId>
+                            <artifactId>book-management-site-ui</artifactId>
+                            <type>jar</type>
+                        </overlay>
+                        <!-- (ADDED) Best Publishing Workflow UI -->
+                        <overlay>
+                            <groupId>org.acme.bestpublishing</groupId>
+                            <artifactId>publishing-workflow-ui</artifactId>
                             <type>jar</type>
                         </overlay>
                         <overlay>
                             <groupId>org.acme.bestpublishing</groupId>
-                            <artifactId>book-management-site-bootstrap</artifactId>
-                            <type>jar</type>
-                        </overlay>
-                        <overlay>
-                            <groupId>org.acme.bestpublishing</groupId>
-                            <artifactId>utils</artifactId>
-                            <type>jar</type>
-                        </overlay>
-                        <overlay>
-                            <groupId>org.acme.bestpublishing</groupId>
-                            <artifactId>content-ingestion</artifactId>
-                            <type>jar</type>
-                        </overlay>
-                        <overlay>
-                            <groupId>org.acme.bestpublishing</groupId>
-                            <artifactId>metadata-ingestion</artifactId>
-                            <type>jar</type>
-                        </overlay>
-                        <overlay>
-                            <groupId>org.acme.bestpublishing</groupId>
-                            <artifactId>publishing-workflow</artifactId>
-                            <type>jar</type>
-                        </overlay>
-                        <overlay>
-                            <groupId>org.acme.bestpublishing</groupId>
-                            <artifactId>book-management-site-actions</artifactId>
+                            <artifactId>book-library-site-ui</artifactId>
                             <type>jar</type>
                         </overlay>
                     </overlays>
