@@ -19,7 +19,7 @@
 
     <properties>
         <!-- Extension Project Versions -->
-        <bp.content.model.version>1.0</bp.content.model.version>
+        <bp.content.model.version>1.1</bp.content.model.version>
         <bp.book.management.sit.bootstrap.version>1.0</bp.book.management.sit.bootstrap.version>
         <bp.utils.version>1.1</bp.utils.version>
         <bp.content.ingestion.version>1.0</bp.content.ingestion.version>
